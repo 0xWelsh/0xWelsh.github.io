@@ -3,39 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>0xWelsh | Home</title>
+  <title>0xWelsh | Writeups</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #0f0f0f;
       color: #f0f0f0;
-      text-align: center;
-      padding: 50px;
+      padding: 40px;
+      line-height: 1.6;
     }
     h1 {
+      text-align: center;
       color: #00ff99;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 10px 0;
     }
     a {
       color: #00aaff;
       text-decoration: none;
-      font-size: 1.2em;
+      font-size: 1.1em;
     }
     a:hover {
-      text-decoration: underline;
       color: #ffaa00;
-    }
-    .container {
-      max-width: 600px;
-      margin: auto;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Welcome to 0xWelsh</h1>
-    <p>This is my personal space where I share notes and writeups.</p>
-    <p><a href="/writeups/">View Writeups</a></p>
-  </div>
+  <h1>0xWelsh Writeups</h1>
+  <ul id="writeups-list">
+    <li>Loading...</li>
+  </ul>
+
+  <script>
+    // Replace with your actual GitHub username/repo
+    const repoOwner = "0xWelsh";
+    const repoName = "0xWelsh.github.io";
+    const writeupsList = document.getElementById("writeups-list");
+
+    fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/writeups`)
+      .then(response => response.json())
+      .then(files => {
+        writeupsList.innerHTML = "";
+        files.forEach(file => {
+          if (file.type === "file") {
+            const li = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = `/writeups/${file.name}`;
+            link.textContent = file.name.replace(/\.[^/.]+$/, ""); // remove extension
+            li.appendChild(link);
+            writeupsList.appendChild(li);
+          }
+        });
+      })
+      .catch(err => {
+        writeupsList.innerHTML = "<li>Failed to load writeups.</li>";
+        console.error(err);
+      });
+  </script>
 </body>
 </html>
 
